@@ -16,7 +16,3 @@
 ## How to Run
 
     npm start
-
-## License
-
-Copyright (C) 2017 Patrick Hund ([MIT](LICENSE))
