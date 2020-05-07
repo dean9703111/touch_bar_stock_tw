@@ -27,7 +27,7 @@
       "output": "build"
     },
     "mac": {
-      "icon": "icons/baobao.jpg"
+      "icon": "icons/logo.png"
     }
   }
 }
