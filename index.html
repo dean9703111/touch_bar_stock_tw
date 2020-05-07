@@ -21,13 +21,14 @@
         let stockinfo;
         let i = 0;
         let arrStock = ['stock1', 'stock2', 'stock3', 'stock4', 'stock5']
+        let arrStockPopover = ['stock1Popover', 'stock2Popover', 'stock3Popover', 'stock4Popover', 'stock5Popover']
         updateStock(stocks)
-        //3秒鐘更新一次
-        setInterval(function () { updateStock(stocks) }, 3000);
-        function stockColor(stock) {
-            if (parseFloat(stock.price) > parseFloat(stock.y)) {
+        //5秒鐘更新一次
+        setInterval(function () { updateStock(stocks) }, 5000);
+        function stockColor(yesterdayStock, price) {
+            if (parseFloat(price) > parseFloat(yesterdayStock)) {
                 return '#FF0000'
-            } else if (parseFloat(stock.price) < parseFloat(stock.y)) {
+            } else if (parseFloat(price) < parseFloat(yesterdayStock)) {
                 return '#00DB00'
             } else {
                 return 'white'
@@ -50,10 +51,38 @@
                 ctx.fillStyle = 'white';
                 ctx.fillText(stockObject.c + stockObject.n, 0, 11);
                 ctx.font = "600 16px Roboto";
-                ctx.fillStyle = stockColor(stockObject);
-                ctx.fillText(stockObject.price, 0, 29);
+                ctx.fillStyle = stockColor(stockObject.y, stockObject.price);
+                ctx.fillText(stockObject.price + ' (' + stockPercent(stockObject) + '%)', 0, 29);
+                const data = canvas.toDataURL('image/png', 1);
+                const image = nativeImage.createFromDataURL(data).toPNG();
+                ipcRenderer.send(stockElement, image);
+            }
+        }
+        function createStockPopoverImg(stockObject, stockElement) {
+            const img = new Image();
+            img.src = './img/empty.png'
+            img.onload = () => {
+                canvas.width = 300;
+                canvas.height = 30;
+                ctx.imageSmoothingQuality = 'high';
+                ctx.font = "12px Roboto";
+                ctx.fillStyle = 'white';
+                ctx.fillText('昨收', 0, 11);
+                ctx.fillText('開盤', 60, 11);
+                ctx.fillText('最高', 120, 11);
+                ctx.fillText('最低', 180, 11);
+                ctx.fillText('成交量', 240, 11);
                 ctx.font = "600 16px Roboto";
-                ctx.fillText('(' + stockPercent(stockObject) + '%)', 60, 29);
+                ctx.fillText(stockObject.y.toString().substring(0, stockObject.y.toString().length - 2), 0, 29);
+                ctx.fillText(stockObject.v.toString().substring(0, stockObject.o.toString().length - 2), 240, 29);
+
+                ctx.fillStyle = stockColor(stockObject.y, stockObject.o);
+                ctx.fillText(stockObject.o.toString().substring(0, stockObject.o.toString().length - 2), 60, 29);
+                ctx.fillStyle = stockColor(stockObject.y, stockObject.h);
+                ctx.fillText(stockObject.h.toString().substring(0, stockObject.h.toString().length - 2), 120, 29);
+                ctx.fillStyle = stockColor(stockObject.y, stockObject.l);
+                ctx.fillText(stockObject.l.toString().substring(0, stockObject.l.toString().length - 2), 180, 29);
+
                 const data = canvas.toDataURL('image/png', 1);
                 const image = nativeImage.createFromDataURL(data).toPNG();
                 ipcRenderer.send(stockElement, image);
@@ -74,6 +103,7 @@
                     }
                     stockObject.price = stockObject.price.substring(0, stockObject.price.length - 2);
                     createStockImg(stockObject, arrStock[i])
+                    createStockPopoverImg(stockObject, arrStockPopover[i])
                     i++
                 })
             });

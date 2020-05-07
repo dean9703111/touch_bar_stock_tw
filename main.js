@@ -8,27 +8,11 @@ let stocks = stockJson.stocks
 // console.log(stocks)
 const path = require('path');
 const url = require('url');
-// stock labels
-const stock1TouchBarSegmentedControl = new TouchBarSegmentedControl({
-    segmentStyle: 'separated',
-    mode: 'buttons'
-})
-const stock2TouchBarSegmentedControl = new TouchBarSegmentedControl({
-    segmentStyle: 'separated',
-    mode: 'buttons'
-})
-const stock3TouchBarSegmentedControl = new TouchBarSegmentedControl({
-    segmentStyle: 'separated',
-    mode: 'buttons'
-})
-const stock4TouchBarSegmentedControl = new TouchBarSegmentedControl({
-    segmentStyle: 'separated',
-    mode: 'buttons'
-})
-const stock5TouchBarSegmentedControl = new TouchBarSegmentedControl({
-    segmentStyle: 'separated',
-    mode: 'buttons'
-})
+const stock1Popover = new TouchBarButton();
+const stock2Popover = new TouchBarButton();
+const stock3Popover = new TouchBarButton();
+const stock4Popover = new TouchBarButton();
+const stock5Popover = new TouchBarButton();
 const stock1Img = new TouchBarButton({
     click: () => {
         win.loadURL('https://www.cmoney.tw/finance/f00025.aspx?s=' + stocks[0]);
@@ -57,71 +41,34 @@ const stock5Img = new TouchBarButton({
 const stock1 = new TouchBarPopover({
     showCloseButton: true,
     items: new TouchBar({
-        items: [stock1Img, stock1TouchBarSegmentedControl]
+        items: [stock1Img, stock1Popover]
     }),
 })
 const stock2 = new TouchBarPopover({
     showCloseButton: true,
     items: new TouchBar({
-        items: [stock2Img, stock2TouchBarSegmentedControl]
+        items: [stock2Img, stock2Popover]
     }),
 })
 const stock3 = new TouchBarPopover({
     showCloseButton: true,
     items: new TouchBar({
-        items: [stock3Img, stock3TouchBarSegmentedControl]
+        items: [stock3Img, stock3Popover]
     }),
 })
 const stock4 = new TouchBarPopover({
     showCloseButton: true,
     items: new TouchBar({
-        items: [stock4Img, stock4TouchBarSegmentedControl]
+        items: [stock4Img, stock4Popover]
     }),
 })
 const stock5 = new TouchBarPopover({
     showCloseButton: true,
     items: new TouchBar({
-        items: [stock5Img, stock5TouchBarSegmentedControl]
+        items: [stock5Img, stock5Popover]
     }),
 })
 
-function Popover (stockItem, stockContent, stockImg) {
-    stockItem.segments = [
-        { label: '開盤價' + stockContent.o.toString().substring(0, stockContent.o.toString().length - 2) },
-        { label: '最高價' + stockContent.h.toString().substring(0, stockContent.h.toString().length - 2) },
-        { label: '最低價' + stockContent.l.toString().substring(0, stockContent.l.toString().length - 2) },
-        { label: '昨收價' + stockContent.y.toString().substring(0, stockContent.y.toString().length - 2) },
-    ]
-}
-setInterval(function () { updateStock() }, 3000);
-updateStock()
-function updateStock () {
-    twseStockPrices.getCurrentPrice(stocks, function (err, result) {
-
-        let stockObjects = result.msgArray
-        let stockLabelArr = []
-        // console.log(stockObjects.length)
-        stockObjects.forEach(function (stockObject) {
-            // ['股票代號','公司簡稱','當盤成交價','當盤成交量','累積成交量','開盤價','最高價','最低價','昨收價']
-            // ['c','n','z','tv','v','o','h','l','y']
-            // '股票代號','公司簡稱','當盤成交價' (漲跌用紅綠表示)
-            if (stockObject.z !== '-') {
-                stockObject.price = stockObject.z.toString()
-            } else {
-                stockObject.price = stockObject.b.substring(0, stockObject.b.indexOf('_'));
-            }
-            stockObject.price = stockObject.price.substring(0, stockObject.price.length - 2);
-            stockLabelArr.push(stockObject)
-        })
-        // stock1.items = new TouchBar([new TouchBarButton({ label: 'pop' })])
-        Popover(stock1TouchBarSegmentedControl, stockLabelArr[0], stock1Img)
-        Popover(stock2TouchBarSegmentedControl, stockLabelArr[1], stock2Img)
-        Popover(stock3TouchBarSegmentedControl, stockLabelArr[2], stock3Img)
-        Popover(stock4TouchBarSegmentedControl, stockLabelArr[3], stock4Img)
-        Popover(stock5TouchBarSegmentedControl, stockLabelArr[4], stock5Img)
-        // console.log(priceObjects);
-    });
-}
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let win;
@@ -182,6 +129,21 @@ function createWindow () {
     ipcMain.on('stock5', (event, arg) => {
         stock5.icon = nativeImage.createFromBuffer(arg).resize({ height: 23 });
         stock5Img.icon = nativeImage.createFromBuffer(arg).resize({ height: 23 });
+    });
+    ipcMain.on('stock1Popover', (event, arg) => {
+        stock1Popover.icon = nativeImage.createFromBuffer(arg).resize({ height: 23 });
+    });
+    ipcMain.on('stock2Popover', (event, arg) => {
+        stock2Popover.icon = nativeImage.createFromBuffer(arg).resize({ height: 23 });
+    });
+    ipcMain.on('stock3Popover', (event, arg) => {
+        stock3Popover.icon = nativeImage.createFromBuffer(arg).resize({ height: 23 });
+    });
+    ipcMain.on('stock4Popover', (event, arg) => {
+        stock4Popover.icon = nativeImage.createFromBuffer(arg).resize({ height: 23 });
+    });
+    ipcMain.on('stock5Popover', (event, arg) => {
+        stock5Popover.icon = nativeImage.createFromBuffer(arg).resize({ height: 23 });
     });
 }
 
