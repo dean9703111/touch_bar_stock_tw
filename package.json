@@ -7,7 +7,7 @@
     "start": "electron .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "repository": "https://github.com/pahund/electron-touch-bar",
+  "repository": "https://github.com/dean9703111/touch_bar_stock_tw.git",
   "author": "Dean",
   "license": "ISC",
   "dependencies": {
