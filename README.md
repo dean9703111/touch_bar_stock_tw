@@ -4,6 +4,11 @@
 主要是因為最近的股票市場很熱絡，加上購買的mac pro的touch bar使用率極低
 於是為了讓自己的技術成長，寫了這個在touch bar上面看股票的小工具
 ```
+![image](/img/stock1.png)
+點擊股票會進入下一層顯示更詳細資訊
+![image](/img/stock2.png)
+點擊最左側股票會直接連結到股票網站（Cmoney）
+
 ## Prerequisites
 
 * latest version of [Node.js](https://nodejs.org/) (at least 6.x.x)
