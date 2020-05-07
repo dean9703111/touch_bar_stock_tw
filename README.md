@@ -21,3 +21,7 @@
 ## How to Run
 
     npm start
+
+## How to Build
+
+    npm run dist
