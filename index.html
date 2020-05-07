@@ -1,19 +1,85 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="UTF-8">
     <title>Hello World!</title>
+    <!-- https://electronjs.org/docs/tutorial/security#csp-meta-tag -->
+    <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline';" />
 </head>
+
 <body>
-<h1>Hello World!</h1>
-We are using node
-<script>document.write(process.versions.node);</script>
-,
-Chrome
-<script>document.write(process.versions.chrome);</script>
-,
-and Electron
-<script>document.write(process.versions.electron);</script>
-.
+    <canvas id="canvas" width="100" height="100" style="display: none"></canvas>
+    <script>
+        const { nativeImage, ipcRenderer } = require('electron');
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        // const img = new Image();
+        var twseStockPrices = require('twse-stock-prices');
+        const stockJson = require('./json/stock.json')
+        let stocks = stockJson.stocks
+        let stockinfo;
+        let i = 0;
+        let arrStock = ['stock1', 'stock2', 'stock3', 'stock4', 'stock5']
+        updateStock(stocks)
+        //3秒鐘更新一次
+        setInterval(function () { updateStock(stocks) }, 3000);
+        function stockColor(stock) {
+            if (parseFloat(stock.price) > parseFloat(stock.y)) {
+                return '#FF0000'
+            } else if (parseFloat(stock.price) < parseFloat(stock.y)) {
+                return '#00DB00'
+            } else {
+                return 'white'
+            }
+        }
+        function stockPercent(stock) {
+            var num = (parseFloat(stock.price) - parseFloat(stock.y)) / parseFloat(stock.y) * 100
+            num = num.toFixed(2);
+            // console.log(num)
+            return num
+        }
+        function createStockImg(stockObject, stockElement) {
+            const img = new Image();
+            img.src = './img/empty.png'
+            img.onload = () => {
+                canvas.width = 120;
+                canvas.height = 30;
+                ctx.imageSmoothingQuality = 'high';
+                ctx.font = "12px Roboto";
+                ctx.fillStyle = 'white';
+                ctx.fillText(stockObject.c + stockObject.n, 0, 11);
+                ctx.font = "600 16px Roboto";
+                ctx.fillStyle = stockColor(stockObject);
+                ctx.fillText(stockObject.price, 0, 29);
+                ctx.font = "600 16px Roboto";
+                ctx.fillText('(' + stockPercent(stockObject) + '%)', 60, 29);
+                const data = canvas.toDataURL('image/png', 1);
+                const image = nativeImage.createFromDataURL(data).toPNG();
+                ipcRenderer.send(stockElement, image);
+            }
+        }
+        function updateStock(stocks) {
+            twseStockPrices.getCurrentPrice(stocks, function (err, result) {
+                let stockObjects = result.msgArray
+                let i = 0
+                stockObjects.forEach(function (stockObject) {
+                    // ['股票代號','公司簡稱','當盤成交價','當盤成交量','累積成交量','開盤價','最高價','最低價','昨收價']
+                    // ['c','n','z','tv','v','o','h','l','y']
+                    // '股票代號','公司簡稱','當盤成交價' (漲跌用紅綠表示)
+                    if (stockObject.z !== '-') {
+                        stockObject.price = stockObject.z.toString()
+                    } else {
+                        stockObject.price = stockObject.b.substring(0, stockObject.b.indexOf('_'));
+                    }
+                    stockObject.price = stockObject.price.substring(0, stockObject.price.length - 2);
+                    createStockImg(stockObject, arrStock[i])
+                    i++
+                })
+            });
+        }
+
+    </script>
 </body>
+
 </html>

@@ -1,13 +1,8 @@
 # electron-touch-bar
 
-A little demo Electron app showing how to program the new MacBook Pro's touch bar.
-
-![touch bar demo in action](touch-bar-demo.gif)
-
-Code is directly taken from these two docs from the Electron team, **all credit goes to them!**
-
-* [quick-start.md](https://github.com/electron/electron/blob/master/docs/tutorial/quick-start.md)
-* [touch-bar.md](https://github.com/electron/electron/blob/master/docs/api/touch-bar.md)
+這是一個以electron為基礎撰寫的touch bar app，目前只有mac pro可以使用
+主要是因為最近的股票市場很熱絡，加上購買的mac pro的touch bar使用率極低
+於是為了讓自己的技術成長，寫了這個在touch bar上面看股票的小工具
 
 ## Prerequisites
 
