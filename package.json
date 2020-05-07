@@ -1,14 +1,14 @@
 {
-  "name": "electron-touch-bar",
+  "name": "electron-touch-bar-stock-tw",
   "version": "1.0.0",
-  "description": "Demo Electron app with Mac touch bar",
+  "description": "Demo Electron app(tw stock) with Mac touch bar ",
   "main": "main.js",
   "scripts": {
     "start": "electron .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": "https://github.com/pahund/electron-touch-bar",
-  "author": "Patrick Hund <pahund@ebay.com>",
+  "author": "Dean",
   "license": "ISC",
   "dependencies": {
     "electron": "^1.6.6",
