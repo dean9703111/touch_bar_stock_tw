@@ -9,6 +9,11 @@
 ![image](/img/stock2.png)
 點擊最左側股票會直接連結到股票網站（Cmoney）
 
+
+### 把gif拆分成png連結
+
+https://image.online-convert.com/convert/gif-to-png
+
 ## Prerequisites
 
 * latest version of [Node.js](https://nodejs.org/) (at least 6.x.x)

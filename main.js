@@ -5,8 +5,11 @@ var fs = require('fs');
 const { TouchBarPopover, TouchBarLabel, TouchBarButton, TouchBarSpacer, TouchBarScrubber, TouchBarSegmentedControl } = TouchBar;
 const stockJson = require('./json/stock.json')
 let stocks = stockJson.stocks
+let preIsGrow = null, goodGif, badGif
 const path = require('path');
 const url = require('url');
+const stockTWGif = new TouchBarButton({ iconPosition: "right" });
+
 const stock1Popover = new TouchBarButton();
 const stock2Popover = new TouchBarButton();
 const stock3Popover = new TouchBarButton();
@@ -75,7 +78,13 @@ let win;
 const button = new TouchBarButton({
     // backgroundColor: '#eb4d4b'
 });
+let testImg
+const touchBarSegmentedControl = new TouchBarSegmentedControl({
+    segmentStyle: 'automatic',
+    segments: [],
+})
 const touchBar = new TouchBar([
+    stockTWGif,
     stock1,
     stock2,
     stock3,
@@ -83,6 +92,32 @@ const touchBar = new TouchBar([
     stock5
 ]);
 
+function setGif (stockGif, isGrow, stockPoint) {
+    // 如果不一樣才會需要改變
+    stockGif.label = stockPoint
+    if (preIsGrow !== isGrow) {
+        preIsGrow = isGrow
+        if (isGrow) {
+            stockGif.backgroundColor = '#FF5151'
+            clearInterval(badGif);
+            let gifCount = 0
+            goodGif = setInterval(function () {
+                stockGif.icon = nativeImage.createFromPath(`./gif/good/good-${gifCount}.png`).resize({ height: 30 });
+                if (gifCount < 9) { gifCount++ }
+                else { gifCount = 0 }
+            }, 100);
+        } else {
+            stockGif.backgroundColor = '#1AFD9C'
+            clearInterval(goodGif);
+            let gifCount = 0
+            badGif = setInterval(function () {
+                stockGif.icon = nativeImage.createFromPath(`./gif/bad/bad-${gifCount}.png`).resize({ height: 30 });                
+                if (gifCount < 7) { gifCount++ }
+                else { gifCount = 0 }
+            }, 100);
+        }
+    }
+}
 function createWindow () {
     // Create the browser window.
     win = new BrowserWindow({ width: 150, height: 200 });
@@ -143,6 +178,9 @@ function createWindow () {
     });
     ipcMain.on('stock5Popover', (event, arg) => {
         stock5Popover.icon = nativeImage.createFromBuffer(arg).resize({ height: 23 });
+    });
+    ipcMain.on('stockTW', (event, stockPoint, isGrow) => {
+        setGif(stockTWGif, isGrow, stockPoint)
     });
     ipcMain.on('saveJson', (event, arg) => {
         var filepath = "./json/stock.json";
