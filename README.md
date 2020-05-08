@@ -5,6 +5,7 @@
 於是為了讓自己的技術成長，寫了這個在touch bar上面看股票的小工具
 ```
 如果您有興趣也可以自己下載來玩玩看[下載連結](https://drive.google.com/open?id=1aMGcHm6IFYzHxjOM-nIusIsXwYrTDNtn)
+
 <img src="./img/stock4.png" data-canonical-src="./img/stock4.png" width="100" height="130" />
 
 這個是簡單的web UI可以自訂5檔股票並儲存
@@ -45,3 +46,5 @@ https://image.online-convert.com/convert/gif-to-png
 
     npm run dist
 
+
+［免責聲明］：本專案純屬私人研究性質，不做為買賣股票投資之依據，請審慎參考，盈虧自負，切勿抄襲。歡迎按星及分享
