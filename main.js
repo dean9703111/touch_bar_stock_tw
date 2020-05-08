@@ -8,7 +8,7 @@ let stocks = stockJson.stocks
 let preIsGrow = null, goodGif, badGif
 const path = require('path');
 const url = require('url');
-const stockTWGif = new TouchBarButton({ iconPosition: "right" });
+const stockTWGif = new TouchBarButton();
 
 const stock1Popover = new TouchBarButton();
 const stock2Popover = new TouchBarButton();
@@ -17,27 +17,27 @@ const stock4Popover = new TouchBarButton();
 const stock5Popover = new TouchBarButton();
 const stock1Img = new TouchBarButton({
     click: () => {
-        win.loadURL('https://www.cmoney.tw/finance/f00025.aspx?s=' + stocks[0]);
+        win.loadURL('https://www.cmoney.tw/finance/f00027.aspx?s=' + stocks[0]);
     }
 });
 const stock2Img = new TouchBarButton({
     click: () => {
-        win.loadURL('https://www.cmoney.tw/finance/f00025.aspx?s=' + stocks[1]);
+        win.loadURL('https://www.cmoney.tw/finance/f00027.aspx?s=' + stocks[1]);
     }
 });
 const stock3Img = new TouchBarButton({
     click: () => {
-        win.loadURL('https://www.cmoney.tw/finance/f00025.aspx?s=' + stocks[2]);
+        win.loadURL('https://www.cmoney.tw/finance/f00027.aspx?s=' + stocks[2]);
     }
 });
 const stock4Img = new TouchBarButton({
     click: () => {
-        win.loadURL('https://www.cmoney.tw/finance/f00025.aspx?s=' + stocks[3]);
+        win.loadURL('https://www.cmoney.tw/finance/f00027.aspx?s=' + stocks[3]);
     }
 });
 const stock5Img = new TouchBarButton({
     click: () => {
-        win.loadURL('https://www.cmoney.tw/finance/f00025.aspx?s=' + stocks[4]);
+        win.loadURL('https://www.cmoney.tw/finance/f00027.aspx?s=' + stocks[4]);
     }
 });
 const stock1 = new TouchBarPopover({
@@ -121,6 +121,7 @@ function setGif (stockGif, isGrow, stockPoint) {
 function createWindow () {
     // Create the browser window.
     win = new BrowserWindow({ width: 150, height: 200 });
+    // win = new BrowserWindow({ width: 800, height: 600 });
 
     // and load the index.html of the app.
     win.loadURL(url.format({
@@ -142,45 +143,46 @@ function createWindow () {
 
     win.setTouchBar(touchBar);
     // ipcMain.on('stock1', (event, arg) => {
-    //     button.icon = nativeImage.createFromBuffer(arg).resize({ height: 23 });
+    //     button.icon = nativeImage.createFromBuffer(arg).resize({ height: 27 });
     // });
     ipcMain.on('stock1', (event, arg) => {
-        stock1.icon = nativeImage.createFromBuffer(arg).resize({ height: 23 });
-        stock1Img.icon = nativeImage.createFromBuffer(arg).resize({ height: 23 });
+        stock1.icon = nativeImage.createFromBuffer(arg).resize({ height: 27 });
+        stock1Img.icon = nativeImage.createFromBuffer(arg).resize({ height: 27 });
     });
     ipcMain.on('stock2', (event, arg) => {
-        stock2.icon = nativeImage.createFromBuffer(arg).resize({ height: 23 });
-        stock2Img.icon = nativeImage.createFromBuffer(arg).resize({ height: 23 });
+        stock2.icon = nativeImage.createFromBuffer(arg).resize({ height: 27 });
+        stock2Img.icon = nativeImage.createFromBuffer(arg).resize({ height: 27 });
     });
     ipcMain.on('stock3', (event, arg) => {
-        stock3.icon = nativeImage.createFromBuffer(arg).resize({ height: 23 });
-        stock3Img.icon = nativeImage.createFromBuffer(arg).resize({ height: 23 });
+        stock3.icon = nativeImage.createFromBuffer(arg).resize({ height: 27 });
+        stock3Img.icon = nativeImage.createFromBuffer(arg).resize({ height: 27 });
     });
     ipcMain.on('stock4', (event, arg) => {
-        stock4.icon = nativeImage.createFromBuffer(arg).resize({ height: 23 });
-        stock4Img.icon = nativeImage.createFromBuffer(arg).resize({ height: 23 });
+        stock4.icon = nativeImage.createFromBuffer(arg).resize({ height: 27 });
+        stock4Img.icon = nativeImage.createFromBuffer(arg).resize({ height: 27 });
     });
     ipcMain.on('stock5', (event, arg) => {
-        stock5.icon = nativeImage.createFromBuffer(arg).resize({ height: 23 });
-        stock5Img.icon = nativeImage.createFromBuffer(arg).resize({ height: 23 });
+        stock5.icon = nativeImage.createFromBuffer(arg).resize({ height: 27 });
+        stock5Img.icon = nativeImage.createFromBuffer(arg).resize({ height: 27 });
     });
     ipcMain.on('stock1Popover', (event, arg) => {
-        stock1Popover.icon = nativeImage.createFromBuffer(arg).resize({ height: 23 });
+        stock1Popover.icon = nativeImage.createFromBuffer(arg).resize({ height: 27 });
     });
     ipcMain.on('stock2Popover', (event, arg) => {
-        stock2Popover.icon = nativeImage.createFromBuffer(arg).resize({ height: 23 });
+        stock2Popover.icon = nativeImage.createFromBuffer(arg).resize({ height: 27 });
     });
     ipcMain.on('stock3Popover', (event, arg) => {
-        stock3Popover.icon = nativeImage.createFromBuffer(arg).resize({ height: 23 });
+        stock3Popover.icon = nativeImage.createFromBuffer(arg).resize({ height: 27 });
     });
     ipcMain.on('stock4Popover', (event, arg) => {
-        stock4Popover.icon = nativeImage.createFromBuffer(arg).resize({ height: 23 });
+        stock4Popover.icon = nativeImage.createFromBuffer(arg).resize({ height: 27 });
     });
     ipcMain.on('stock5Popover', (event, arg) => {
-        stock5Popover.icon = nativeImage.createFromBuffer(arg).resize({ height: 23 });
+        stock5Popover.icon = nativeImage.createFromBuffer(arg).resize({ height: 27 });
     });
-    ipcMain.on('stockTW', (event, stockPoint, isGrow) => {
-        setGif(stockTWGif, isGrow, stockPoint)
+    ipcMain.on('stockTW', (event, arg) => {
+        // setGif(stockTWGif, isGrow, stockPoint)
+        stockTWGif.icon = nativeImage.createFromBuffer(arg).resize({ height: 30 });
     });
     ipcMain.on('saveJson', (event, arg) => {
         var filepath = "./json/stock.json";

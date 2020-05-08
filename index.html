@@ -25,6 +25,10 @@
         var twseStockPrices = require('twse-stock-prices');
         const stockJson = require('./json/stock.json')
         let stocks = stockJson.stocks
+        let stockTW = {
+            price: '',
+            color: '',
+        }//加權指數
         let i = 0;
         let arrStock = ['stock1', 'stock2', 'stock3', 'stock4', 'stock5']
         let arrStockPopover = ['stock1Popover', 'stock2Popover', 'stock3Popover', 'stock4Popover', 'stock5Popover']
@@ -60,22 +64,54 @@
             // console.log(num)
             return num
         }
-        function createTWStockImg(stockObject) {
-            ipcRenderer.send('stockTW', stockObject.price, stockObject.y < stockObject.price);
-        }
+        let gifCount = 0, maxGifCount = 0;
+        setInterval(function () {
+            const img = new Image();
+            //確認跑哪個圖片
+            console.log(stockTW.color)
+            if (stockTW.color == '#FF0000') {
+                img.src = `./gif/good/good-${gifCount}.png`
+                maxGifCount = 9
+            } else if (stockTW.color != '') {
+                console.log('bad')
+                img.src = `./gif/bad/bad-${gifCount}.png`
+                maxGifCount = 7
+            }
+
+            img.onload = () => {
+                canvas.width = 245;
+                canvas.height = 100;
+                ctx.imageSmoothingQuality = 'high';
+                ctx.drawImage(img, 0, 0, img.width, img.height, 160, 0, 100, 100);
+
+                ctx.font = "36px Roboto";
+                ctx.fillStyle = 'white';
+                ctx.fillText("加權指數", 0, 40);
+                ctx.font = "600 48px Roboto";
+                ctx.fillStyle = stockTW.color
+                ctx.fillText(stockTW.price, 8, 90);
+
+
+                const data = canvas.toDataURL('image/png', 1);
+                const image = nativeImage.createFromDataURL(data).toPNG();
+                ipcRenderer.send('stockTW', image);
+            }
+            if (gifCount < maxGifCount) { gifCount++ }
+            else { gifCount = 0 }
+        }, 100);
         function createStockImg(stockObject, stockElement) {
             const img = new Image();
             img.src = './img/empty.png'
             img.onload = () => {
-                canvas.width = 95;
-                canvas.height = 30;
+                canvas.width = 140;
+                canvas.height = 50;
                 ctx.imageSmoothingQuality = 'high';
-                ctx.font = "12px Roboto";
+                ctx.font = "18px Roboto";
                 ctx.fillStyle = 'white';
-                ctx.fillText(stockObject.c + stockObject.n, 0, 11);
-                ctx.font = "400 14px Roboto";
+                ctx.fillText(stockObject.c + stockObject.n, 0, 20);
+                ctx.font = "400 20px Roboto";
                 ctx.fillStyle = stockColor(stockObject.y, stockObject.price);
-                ctx.fillText(stockObject.price + ' (' + stockPercent(stockObject) + '%)', 0, 29);
+                ctx.fillText(stockObject.price + ' (' + stockPercent(stockObject) + '%)', 0, 44);
                 const data = canvas.toDataURL('image/png', 1);
                 const image = nativeImage.createFromDataURL(data).toPNG();
                 ipcRenderer.send(stockElement, image);
@@ -85,26 +121,26 @@
             const img = new Image();
             img.src = './img/empty.png'
             img.onload = () => {
-                canvas.width = 290;
-                canvas.height = 30;
+                canvas.width = 400;
+                canvas.height = 50;
                 ctx.imageSmoothingQuality = 'high';
-                ctx.font = "12px Roboto";
+                ctx.font = "18px Roboto";
                 ctx.fillStyle = 'white';
-                ctx.fillText('昨收', 0, 11);
-                ctx.fillText('開盤', 60, 11);
-                ctx.fillText('最高', 120, 11);
-                ctx.fillText('最低', 180, 11);
-                ctx.fillText('成交量', 240, 11);
-                ctx.font = "400 14px Roboto";
-                ctx.fillText(stockObject.y.toString().substring(0, stockObject.y.toString().length - 2), 0, 29);
-                ctx.fillText(stockObject.v.toString().substring(0, stockObject.o.toString().length - 2), 240, 29);
+                ctx.fillText('昨收', 0, 20);
+                ctx.fillText('開盤', 80, 20);
+                ctx.fillText('最高', 160, 20);
+                ctx.fillText('最低', 240, 20);
+                ctx.fillText('成交量', 320, 20);
+                ctx.font = "400 20px Roboto";
+                ctx.fillText(stockObject.y.toString().substring(0, stockObject.y.toString().length - 2), 0, 45);
+                ctx.fillText(stockObject.v.toString().substring(0, stockObject.o.toString().length - 2), 320, 45);
 
                 ctx.fillStyle = stockColor(stockObject.y, stockObject.o);
-                ctx.fillText(stockObject.o.toString().substring(0, stockObject.o.toString().length - 2), 60, 29);
+                ctx.fillText(stockObject.o.toString().substring(0, stockObject.o.toString().length - 2), 80, 45);
                 ctx.fillStyle = stockColor(stockObject.y, stockObject.h);
-                ctx.fillText(stockObject.h.toString().substring(0, stockObject.h.toString().length - 2), 120, 29);
+                ctx.fillText(stockObject.h.toString().substring(0, stockObject.h.toString().length - 2), 160, 45);
                 ctx.fillStyle = stockColor(stockObject.y, stockObject.l);
-                ctx.fillText(stockObject.l.toString().substring(0, stockObject.l.toString().length - 2), 180, 29);
+                ctx.fillText(stockObject.l.toString().substring(0, stockObject.l.toString().length - 2), 240, 45);
 
                 const data = canvas.toDataURL('image/png', 1);
                 const image = nativeImage.createFromDataURL(data).toPNG();
@@ -112,15 +148,13 @@
             }
         }
         function updateStock(stocks) {
-            console.log(stocks)
             twseStockPrices.getCurrentPrice(stocks, function (err, result) {
                 let stockObjects = result.msgArray
                 let i = 0
                 stockObjects.forEach(function (stockObject) {
-                    console.log(stockObject.n)
                     if (i == 0) {//加權指數
-                        stockObject.price = parseInt(stockObject.z).toString()                        
-                        createTWStockImg(stockObject)
+                        stockTW.price = parseInt(stockObject.z).toString()
+                        stockTW.color = stockColor(stockObject.y, stockObject.z)
                     } else {
                         // ['股票代號','公司簡稱','當盤成交價','當盤成交量','累積成交量','開盤價','最高價','最低價','昨收價']
                         // ['c','n','z','tv','v','o','h','l','y']
