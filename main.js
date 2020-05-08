@@ -1,11 +1,10 @@
 const electron = require('electron');
 
 const { app, BrowserWindow, nativeImage, ipcMain, TouchBar } = require('electron');
-var twseStockPrices = require('twse-stock-prices');
+var fs = require('fs');
 const { TouchBarPopover, TouchBarLabel, TouchBarButton, TouchBarSpacer, TouchBarScrubber, TouchBarSegmentedControl } = TouchBar;
 const stockJson = require('./json/stock.json')
 let stocks = stockJson.stocks
-// console.log(stocks)
 const path = require('path');
 const url = require('url');
 const stock1Popover = new TouchBarButton();
@@ -86,7 +85,7 @@ const touchBar = new TouchBar([
 
 function createWindow () {
     // Create the browser window.
-    win = new BrowserWindow({ width: 800, height: 600 });
+    win = new BrowserWindow({ width: 150, height: 200 });
 
     // and load the index.html of the app.
     win.loadURL(url.format({
@@ -96,7 +95,7 @@ function createWindow () {
     }));
 
     // Open the DevTools.
-    win.webContents.openDevTools();
+    // win.webContents.openDevTools();
 
     // Emitted when the window is closed.
     win.on('closed', () => {
@@ -144,6 +143,19 @@ function createWindow () {
     });
     ipcMain.on('stock5Popover', (event, arg) => {
         stock5Popover.icon = nativeImage.createFromBuffer(arg).resize({ height: 23 });
+    });
+    ipcMain.on('saveJson', (event, arg) => {
+        var filepath = "./json/stock.json";
+        var tmpJson = {
+            "stocks": arg
+        }
+        fs.writeFile(filepath, JSON.stringify(tmpJson), (err) => {
+            if (err) {
+                console.log(err);
+                return;
+            }
+            // console.log("The file has been succesfully saved");
+        });
     });
 }
 
