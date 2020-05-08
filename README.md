@@ -22,7 +22,7 @@
 1. electron: 可以完成跨平台平台的app的好工具
 2. touchbar: mac pro上方的觸碰螢幕
 3. canvas: 因為touch bar目前官方不支援gif以及相關文字圖片結合，故使用連續的圖片來做動圖以及拼接文字圖片來讓面板更有互動性
-
+4. twse: 因為目前沒有現成抓台股的npm套件，所以自己寫了一個[簡易版本](https://www.npmjs.com/package/twse-stock-prices)的套件
 
 ### 把gif拆分成png連結
 
