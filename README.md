@@ -7,7 +7,6 @@
 如果您有興趣也可以自己下載來玩玩看[下載連結](https://drive.google.com/open?id=1aMGcHm6IFYzHxjOM-nIusIsXwYrTDNtn)
 
 <img src="./img/stock4.png" data-canonical-src="./img/stock4.png" width="100" height="130" />
-
 這個是簡單的web UI可以自訂5檔股票並儲存
 
 ![image](/img/stock1.png)
