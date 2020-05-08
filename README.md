@@ -4,10 +4,23 @@
 主要是因為最近的股票市場很熱絡，加上購買的mac pro的touch bar使用率極低
 於是為了讓自己的技術成長，寫了這個在touch bar上面看股票的小工具
 ```
+<img src="./img/stock4.png" data-canonical-src="./img/stock4.png" width="100" height="130" />
+
+這個是簡單的web UI可以自訂5檔股票並儲存
+
 ![image](/img/stock1.png)
-點擊股票會進入下一層顯示更詳細資訊
+點擊大盤或是個股會進入下一層顯示更詳細資訊
+
 ![image](/img/stock2.png)
-點擊最左側股票會直接連結到股票網站（Cmoney）
+點擊最左側按鈕會直接連結到大盤首頁（Cmoney）
+
+![image](/img/stock3.png)
+點擊最左側按鈕會直接連結到股票網站（Cmoney）
+
+### 使用到的相關技術
+1. electron: 可以完成跨平台平台的app的好工具
+2. touchbar: mac pro上方的觸碰螢幕
+3. canvas: 因為touch bar目前官方不支援gif以及相關文字圖片結合，故使用連續的圖片來做動圖以及拼接文字圖片來讓面板更有互動性
 
 
 ### 把gif拆分成png連結
