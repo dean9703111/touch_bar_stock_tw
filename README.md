@@ -4,6 +4,7 @@
 主要是因為最近的股票市場很熱絡，加上購買的mac pro的touch bar使用率極低
 於是為了讓自己的技術成長，寫了這個在touch bar上面看股票的小工具
 ```
+如果您有興趣也可以自己下載來玩玩看[下載連結](https://drive.google.com/open?id=1aMGcHm6IFYzHxjOM-nIusIsXwYrTDNtn)
 <img src="./img/stock4.png" data-canonical-src="./img/stock4.png" width="100" height="130" />
 
 這個是簡單的web UI可以自訂5檔股票並儲存
@@ -43,3 +44,4 @@ https://image.online-convert.com/convert/gif-to-png
 ## How to Build
 
     npm run dist
+
