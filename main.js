@@ -8,13 +8,18 @@ let stocks = stockJson.stocks
 let preIsGrow = null, goodGif, badGif
 const path = require('path');
 const url = require('url');
-const stockTWGif = new TouchBarButton();
 
+const stockTWPopover = new TouchBarButton();
 const stock1Popover = new TouchBarButton();
 const stock2Popover = new TouchBarButton();
 const stock3Popover = new TouchBarButton();
 const stock4Popover = new TouchBarButton();
 const stock5Popover = new TouchBarButton();
+const stockTWImg = new TouchBarButton({
+    click: () => {
+        win.loadURL('https://www.cmoney.tw/finance/f00008.aspx');
+    }
+});
 const stock1Img = new TouchBarButton({
     click: () => {
         win.loadURL('https://www.cmoney.tw/finance/f00027.aspx?s=' + stocks[0]);
@@ -40,6 +45,13 @@ const stock5Img = new TouchBarButton({
         win.loadURL('https://www.cmoney.tw/finance/f00027.aspx?s=' + stocks[4]);
     }
 });
+
+const stockTW = new TouchBarPopover({
+    showCloseButton: true,
+    items: new TouchBar({
+        items: [stockTWImg, stockTWPopover]
+    }),
+})
 const stock1 = new TouchBarPopover({
     showCloseButton: true,
     items: new TouchBar({
@@ -84,7 +96,7 @@ const touchBarSegmentedControl = new TouchBarSegmentedControl({
     segments: [],
 })
 const touchBar = new TouchBar([
-    stockTWGif,
+    stockTW,
     stock1,
     stock2,
     stock3,
@@ -92,32 +104,6 @@ const touchBar = new TouchBar([
     stock5
 ]);
 
-function setGif (stockGif, isGrow, stockPoint) {
-    // 如果不一樣才會需要改變
-    stockGif.label = stockPoint
-    if (preIsGrow !== isGrow) {
-        preIsGrow = isGrow
-        if (isGrow) {
-            stockGif.backgroundColor = '#FF5151'
-            clearInterval(badGif);
-            let gifCount = 0
-            goodGif = setInterval(function () {
-                stockGif.icon = nativeImage.createFromPath(`./gif/good/good-${gifCount}.png`).resize({ height: 30 });
-                if (gifCount < 9) { gifCount++ }
-                else { gifCount = 0 }
-            }, 100);
-        } else {
-            stockGif.backgroundColor = '#1AFD9C'
-            clearInterval(goodGif);
-            let gifCount = 0
-            badGif = setInterval(function () {
-                stockGif.icon = nativeImage.createFromPath(`./gif/bad/bad-${gifCount}.png`).resize({ height: 30 });                
-                if (gifCount < 7) { gifCount++ }
-                else { gifCount = 0 }
-            }, 100);
-        }
-    }
-}
 function createWindow () {
     // Create the browser window.
     win = new BrowserWindow({ width: 150, height: 200 });
@@ -165,6 +151,10 @@ function createWindow () {
         stock5.icon = nativeImage.createFromBuffer(arg).resize({ height: 27 });
         stock5Img.icon = nativeImage.createFromBuffer(arg).resize({ height: 27 });
     });
+    ipcMain.on('stockTW', (event, arg) => {
+        stockTW.icon = nativeImage.createFromBuffer(arg).resize({ height: 30 });
+        stockTWImg.icon = nativeImage.createFromBuffer(arg).resize({ height: 30 });
+    });
     ipcMain.on('stock1Popover', (event, arg) => {
         stock1Popover.icon = nativeImage.createFromBuffer(arg).resize({ height: 27 });
     });
@@ -180,9 +170,8 @@ function createWindow () {
     ipcMain.on('stock5Popover', (event, arg) => {
         stock5Popover.icon = nativeImage.createFromBuffer(arg).resize({ height: 27 });
     });
-    ipcMain.on('stockTW', (event, arg) => {
-        // setGif(stockTWGif, isGrow, stockPoint)
-        stockTWGif.icon = nativeImage.createFromBuffer(arg).resize({ height: 30 });
+    ipcMain.on('stockTWPopover', (event, arg) => {
+        stockTWPopover.icon = nativeImage.createFromBuffer(arg).resize({ height: 27 });
     });
     ipcMain.on('saveJson', (event, arg) => {
         var filepath = "./json/stock.json";

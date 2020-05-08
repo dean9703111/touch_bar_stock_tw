@@ -132,15 +132,28 @@
                 ctx.fillText('最低', 240, 20);
                 ctx.fillText('成交量', 320, 20);
                 ctx.font = "400 20px Roboto";
-                ctx.fillText(stockObject.y.toString().substring(0, stockObject.y.toString().length - 2), 0, 45);
-                ctx.fillText(stockObject.v.toString().substring(0, stockObject.o.toString().length - 2), 320, 45);
+                if (stockElement == 'stockTWPopover') {
+                    ctx.fillText(parseInt(stockObject.y.toString()) , 0, 45);
+                    ctx.fillText(parseInt(stockObject.v.toString()), 320, 45);
 
-                ctx.fillStyle = stockColor(stockObject.y, stockObject.o);
-                ctx.fillText(stockObject.o.toString().substring(0, stockObject.o.toString().length - 2), 80, 45);
-                ctx.fillStyle = stockColor(stockObject.y, stockObject.h);
-                ctx.fillText(stockObject.h.toString().substring(0, stockObject.h.toString().length - 2), 160, 45);
-                ctx.fillStyle = stockColor(stockObject.y, stockObject.l);
-                ctx.fillText(stockObject.l.toString().substring(0, stockObject.l.toString().length - 2), 240, 45);
+                    ctx.fillStyle = stockColor(stockObject.y, stockObject.o);
+                    ctx.fillText(parseInt(stockObject.o.toString()), 80, 45);
+                    ctx.fillStyle = stockColor(stockObject.y, stockObject.h);
+                    ctx.fillText(parseInt(stockObject.h.toString()), 160, 45);
+                    ctx.fillStyle = stockColor(stockObject.y, stockObject.l);
+                    ctx.fillText(parseInt(stockObject.l.toString()), 240, 45);
+                } else {
+                    ctx.fillText(stockObject.y.toString().substring(0, stockObject.y.toString().length - 2), 0, 45);
+                    ctx.fillText(stockObject.v.toString().substring(0, stockObject.o.toString().length - 2), 320, 45);
+
+                    ctx.fillStyle = stockColor(stockObject.y, stockObject.o);
+                    ctx.fillText(stockObject.o.toString().substring(0, stockObject.o.toString().length - 2), 80, 45);
+                    ctx.fillStyle = stockColor(stockObject.y, stockObject.h);
+                    ctx.fillText(stockObject.h.toString().substring(0, stockObject.h.toString().length - 2), 160, 45);
+                    ctx.fillStyle = stockColor(stockObject.y, stockObject.l);
+                    ctx.fillText(stockObject.l.toString().substring(0, stockObject.l.toString().length - 2), 240, 45);
+                }
+
 
                 const data = canvas.toDataURL('image/png', 1);
                 const image = nativeImage.createFromDataURL(data).toPNG();
@@ -155,6 +168,7 @@
                     if (i == 0) {//加權指數
                         stockTW.price = parseInt(stockObject.z).toString()
                         stockTW.color = stockColor(stockObject.y, stockObject.z)
+                        createStockPopoverImg(stockObject, 'stockTWPopover')
                     } else {
                         // ['股票代號','公司簡稱','當盤成交價','當盤成交量','累積成交量','開盤價','最高價','最低價','昨收價']
                         // ['c','n','z','tv','v','o','h','l','y']
