@@ -3,12 +3,20 @@ const electron = require('electron');
 const { app, BrowserWindow, nativeImage, ipcMain, TouchBar } = require('electron');
 var fs = require('fs');
 const { TouchBarPopover, TouchBarLabel, TouchBarButton, TouchBarSpacer, TouchBarScrubber, TouchBarSegmentedControl } = TouchBar;
-const stockJson = require('./json/stock.json')
-let stocks = stockJson.stocks
-let preIsGrow = null, goodGif, badGif
+
 const path = require('path');
 const url = require('url');
-
+const Store = require('./store.js');
+// First instantiate the class
+const store = new Store({
+    // We'll call our data file 'user-preferences'
+    configName: 'user-stocks',
+    defaults: {
+        // 800x600 is the default size of our window
+        stocks: ["t00", "3029", "1305", "8437", "1256", "8462"]
+    }
+});
+let stocks = store.get('stocks');
 const stockTWPopover = new TouchBarButton();
 const stock1Popover = new TouchBarButton();
 const stock2Popover = new TouchBarButton();
@@ -87,14 +95,6 @@ const stock5 = new TouchBarPopover({
 // be closed automatically when the JavaScript object is garbage collected.
 let win;
 
-const button = new TouchBarButton({
-    // backgroundColor: '#eb4d4b'
-});
-let testImg
-const touchBarSegmentedControl = new TouchBarSegmentedControl({
-    segmentStyle: 'automatic',
-    segments: [],
-})
 const touchBar = new TouchBar([
     stockTW,
     stock1,
@@ -174,17 +174,19 @@ function createWindow () {
         stockTWPopover.icon = nativeImage.createFromBuffer(arg).resize({ height: 27 });
     });
     ipcMain.on('saveJson', (event, arg) => {
-        var filepath = "./json/stock.json";
-        var tmpJson = {
-            "stocks": arg
-        }
-        fs.writeFile(filepath, JSON.stringify(tmpJson), (err) => {
-            if (err) {
-                console.log(err);
-                return;
-            }
-            // console.log("The file has been succesfully saved");
-        });
+        console.log(arg)
+        store.set('stocks', arg);
+        // var filepath = "./json/stock.json";
+        // var tmpJson = {
+        //     "stocks": arg
+        // }
+        // fs.writeFile(filepath, JSON.stringify(tmpJson), (err) => {
+        //     if (err) {
+        //         console.log(err);
+        //         return;
+        //     }
+        //     // console.log("The file has been succesfully saved");
+        // });
     });
 }
 

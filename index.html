@@ -23,8 +23,17 @@
         const ctx = canvas.getContext('2d');
         // const img = new Image();
         var twseStockPrices = require('twse-stock-prices');
-        const stockJson = require('./json/stock.json')
-        let stocks = stockJson.stocks
+        const Store = require('./store.js');
+        // First instantiate the class
+        const store = new Store({
+            // We'll call our data file 'user-preferences'
+            configName: 'user-stocks',
+            defaults: {
+                // 800x600 is the default size of our window
+                stocks: ["t00", "3029", "1305", "8437", "1256", "8462"]
+            }
+        });
+        let stocks = store.get('stocks');
         let stockTW = {
             price: '',
             color: '',
@@ -133,7 +142,7 @@
                 ctx.fillText('成交量', 320, 20);
                 ctx.font = "400 20px Roboto";
                 if (stockElement == 'stockTWPopover') {
-                    ctx.fillText(parseInt(stockObject.y.toString()) , 0, 45);
+                    ctx.fillText(parseInt(stockObject.y.toString()), 0, 45);
                     ctx.fillText(parseInt(stockObject.v.toString()), 320, 45);
 
                     ctx.fillStyle = stockColor(stockObject.y, stockObject.o);
